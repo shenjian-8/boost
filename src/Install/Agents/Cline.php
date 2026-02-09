@@ -24,17 +24,11 @@ class Cline extends Agent implements SupportsGuidelines, SupportsMcp, SupportsSk
     public function systemDetectionConfig(Platform $platform): array
     {
         return match ($platform) {
-            Platform::Darwin => [
-                'paths' => ['/Applications/Visual Studio Code.app'],
-            ],
-            Platform::Linux => [
-                'command' => 'command -v code',
+            Platform::Darwin, Platform::Linux => [
+                'command' => 'code --list-extensions | grep "saoudrizwan.claude-dev"',
             ],
             Platform::Windows => [
-                'paths' => [
-                    '%ProgramFiles%\\Microsoft VS Code',
-                    '%LOCALAPPDATA%\\Programs\\Microsoft VS Code',
-                ],
+                'command' => 'code --list-extensions | findstr "saoudrizwan.claude-dev"',
             ],
         };
     }
@@ -63,8 +57,6 @@ class Cline extends Agent implements SupportsGuidelines, SupportsMcp, SupportsSk
     public function mcpServerConfig(string $command, array $args = [], array $env = []): array
     {
         return [
-            'autoApprove' => [],
-            'timeout' => 300,
             'type' => 'stdio',
             'disabled' => false,
             'command' => $command,
